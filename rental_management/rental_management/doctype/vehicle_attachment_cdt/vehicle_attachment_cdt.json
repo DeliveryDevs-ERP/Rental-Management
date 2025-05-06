@@ -13,7 +13,7 @@
    "fieldname": "attachments",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Attachments",
+   "label": "Accessory",
    "options": "Item",
    "reqd": 1
   }
@@ -21,7 +21,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-22 13:33:56.772619",
+ "modified": "2025-04-22 16:50:30.920426",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Vehicle Attachment cdt",

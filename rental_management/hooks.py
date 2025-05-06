@@ -79,6 +79,13 @@ app_license = "mit"
 # 	"filters": "rental_management.utils.jinja_filters"
 # }
 
+jinja = {
+	"methods": [
+        "rental_management.rental_management.scripts.jinja.get_qr_code"
+    ],
+	# "filters": "rental_management.utils.jinja_filters
+}
+
 # Installation
 # ------------
 
@@ -148,23 +155,23 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"rental_management.tasks.all"
-# 	],
-# 	"daily": [
-# 		"rental_management.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"rental_management.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"rental_management.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"rental_management.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	# "all": [
+	# 	"rental_management.tasks.all"
+	# ],
+	"daily": [
+		"rental_management.tasks.daily.daily"
+	],
+	# "hourly": [
+	# 	"rental_management.tasks.hourly"
+	# ],
+	# "weekly": [
+	# 	"rental_management.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"rental_management.tasks.monthly"
+	# ],
+}
 
 # Testing
 # -------
@@ -236,7 +243,7 @@ app_license = "mit"
 # ]
 
 # Automatically update python controller files with type annotations for this app.
-# export_python_type_annotations = True
+export_python_type_annotations = True
 
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
