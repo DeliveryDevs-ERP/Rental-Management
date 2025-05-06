@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:O-{#####}",
  "creation": "2025-05-06 14:52:15.452426",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -159,10 +160,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-06 16:55:37.328790",
+ "modified": "2025-05-06 18:31:47.840394",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Vehicle Movement",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
