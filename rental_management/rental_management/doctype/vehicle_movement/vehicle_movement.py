@@ -15,11 +15,12 @@ class VehicleMovement(Document):
             frappe.throw(_(f"Vehicle Movement submission failed due to: {str(e)}"))
 
     def update_vehicle(self):
-        if not self.vehicle:
-            frappe.throw(_("Vehicle is not specified."))
+        if self.status == "Mobilise":
+            if not self.vehicle:
+                frappe.throw(_("Vehicle is not specified."))
 
-        frappe.db.set_value("Vehicle", self.vehicle, {
-            "custom_last_location": self.location_to,
-            "custom_state": "With Client"
-        })
-        frappe.db.commit()
+            frappe.db.set_value("Vehicle", self.vehicle, {
+                "custom_last_location": self.location_to,
+                "custom_state": "With Client"
+            })
+            frappe.db.commit()
