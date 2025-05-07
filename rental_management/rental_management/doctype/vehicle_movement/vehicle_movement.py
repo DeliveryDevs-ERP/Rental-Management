@@ -6,6 +6,31 @@ from frappe.model.document import Document
 from frappe import _
 
 class VehicleMovement(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        amended_from: DF.Link | None
+        contract: DF.Attach | None
+        customer: DF.Link | None
+        loa: DF.Attach | None
+        location: DF.Link | None
+        location_from: DF.Link | None
+        location_to: DF.Link | None
+        movement_date: DF.Date
+        project_id: DF.Link | None
+        rent_type: DF.Literal["", "Without Driver", "With Driver"]
+        status: DF.Literal["", "Available for Use", "Mobilise", "Demobilise", "Breakdown"]
+        vehicle: DF.Link
+        vehicle_checklist: DF.Attach | None
+        vehicle_ownership_status: DF.Data | None
+        vehicle_state: DF.Data | None
+        vehicle_type: DF.Data | None
+    # end: auto-generated types
     
     def on_submit(self):
         try:
@@ -22,5 +47,23 @@ class VehicleMovement(Document):
             frappe.db.set_value("Vehicle", self.vehicle, {
                 "custom_last_location": self.location_to,
                 "custom_state": "With Client"
+            })
+            frappe.db.commit()
+        elif self.status == "Demobilise" or self.status == "Available for Use":
+            if not self.vehicle:
+                frappe.throw(_("Vehicle is not specified."))
+
+            frappe.db.set_value("Vehicle", self.vehicle, {
+                "custom_last_location": self.location_to,
+                "custom_state": "Idle"
+            })
+            frappe.db.commit()
+        elif self.status == "Breakdown":
+            if not self.vehicle:
+                frappe.throw(_("Vehicle is not specified."))
+
+            frappe.db.set_value("Vehicle", self.vehicle, {
+                "custom_last_location": self.location_to,
+                "custom_state": "Workshop"
             })
             frappe.db.commit()
