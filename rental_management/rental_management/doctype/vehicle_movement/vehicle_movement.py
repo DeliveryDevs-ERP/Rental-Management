@@ -46,7 +46,8 @@ class VehicleMovement(Document):
 
             frappe.db.set_value("Vehicle", self.vehicle, {
                 "custom_last_location": self.location_to,
-                "custom_state": "With Client"
+                "custom_state": "With Client",
+                "custom_project": self.project_id
             })
             frappe.db.commit()
         elif self.status == "Demobilise" or self.status == "Available for Use":
@@ -55,7 +56,8 @@ class VehicleMovement(Document):
 
             frappe.db.set_value("Vehicle", self.vehicle, {
                 "custom_last_location": self.location_to,
-                "custom_state": "Idle"
+                "custom_state": "Idle",
+                "custom_project": None
             })
             frappe.db.commit()
         elif self.status == "Breakdown":
@@ -64,6 +66,7 @@ class VehicleMovement(Document):
 
             frappe.db.set_value("Vehicle", self.vehicle, {
                 "custom_last_location": self.location_to,
-                "custom_state": "Workshop"
+                "custom_state": "Workshop",
+                "custom_project": None
             })
             frappe.db.commit()
