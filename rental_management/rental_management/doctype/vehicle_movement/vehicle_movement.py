@@ -23,6 +23,7 @@ class VehicleMovement(Document):
         location_to: DF.Link | None
         movement_date: DF.Date
         project_id: DF.Link | None
+        project_to: DF.Link | None
         rent_type: DF.Literal["", "Without Driver", "With Driver"]
         status: DF.Literal["", "Available for Use", "Mobilise", "Demobilise", "Breakdown"]
         vehicle: DF.Link
@@ -47,6 +48,7 @@ class VehicleMovement(Document):
             frappe.db.set_value("Vehicle", self.vehicle, {
                 "custom_last_location": self.location_to,
                 "custom_state": "With Client",
+                "custom_current_rent_type": self.rent_type,
                 "custom_project": self.project_id
             })
             frappe.db.commit()
@@ -57,6 +59,7 @@ class VehicleMovement(Document):
             frappe.db.set_value("Vehicle", self.vehicle, {
                 "custom_last_location": self.location_to,
                 "custom_state": "Idle",
+                "custom_current_rent_type": None,
                 "custom_project": None
             })
             frappe.db.commit()
@@ -67,6 +70,7 @@ class VehicleMovement(Document):
             frappe.db.set_value("Vehicle", self.vehicle, {
                 "custom_last_location": self.location_to,
                 "custom_state": "Workshop",
+                "custom_current_rent_type": None,
                 "custom_project": None
             })
             frappe.db.commit()
