@@ -49,7 +49,7 @@ class VehicleMovement(Document):
                 "custom_last_location": self.location_to,
                 "custom_state": "With Client",
                 "custom_current_rent_type": self.rent_type,
-                "custom_project": self.project_id
+                "custom_project": self.project_to
             })
             frappe.db.commit()
         elif self.status == "Demobilise" or self.status == "Available for Use":
