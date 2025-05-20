@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:O-{#####}",
+ "autoname": "format:VM-{movement_date}-{#####}",
  "creation": "2025-05-06 14:52:15.452426",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -173,7 +173,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-13 15:07:16.080436",
+ "modified": "2025-05-19 14:30:14.346044",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Vehicle Movement",

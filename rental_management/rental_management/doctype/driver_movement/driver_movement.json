@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:DM-{#####}",
+ "autoname": "format:DM-{date}-{#####}",
  "creation": "2025-05-13 13:49:05.306605",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -52,7 +52,6 @@
    "fieldname": "driver",
    "fieldtype": "Link",
    "label": "Driver",
-   "link_filters": "[[\"Driver\",\"status\",\"=\",\"Active\"]]",
    "options": "Driver",
    "reqd": 1
   },
@@ -108,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-13 17:25:08.890839",
+ "modified": "2025-05-19 15:28:30.281118",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Driver Movement",

@@ -19,7 +19,7 @@ class TrafficFineorAccident(Document):
 		accident_detail: DF.Table[AccidentLogs]
 		amended_from: DF.Link | None
 		customer: DF.Link | None
-		date: DF.Date | None
+		date: DF.Date
 		detail: DF.Table[Finescdt]
 		driver: DF.Link | None
 		employment_type: DF.Link | None

@@ -15,6 +15,57 @@ frappe.ui.form.on("Driver Movement", {
         }
     },
 
+    // mobilization_status(frm) {
+    //     if (frm.doc.mobilization_status) {
+    //         console.log("new mobilization_status",frm.doc.mobilization_status);
+    //         frm.set_query("driver", () => {
+    //             if (frm.doc.mobilization_status === "Mobilize") {
+    //                 return {
+    //                     filters: {
+    //                         custom_state: "Idle",
+    //                         status: "Active"
+    //                     }
+    //                 };
+    //             } else if (frm.doc.mobilization_status === "Demobilize") {
+    //                 return {
+    //                     filters: {
+    //                         custom_state: "With Client",
+    //                         status: "Active"
+    //                     }
+    //                 };
+    //             }                
+    //         });
+    //     }
+    // },
+
+    mobilization_status(frm) {
+    if (frm.doc.mobilization_status) {
+        frappe.call({
+            method: "rental_management.rental_management.doctype.driver_movement.utils.get_available_drivers",
+            args: {
+                mobilization_status: frm.doc.mobilization_status
+            },
+            callback: function(r) {
+                if (r.message) {
+                    const options = r.message.map(driver => ({
+                        value: driver.name,
+                        label: driver.label
+                    }));
+
+                    frm.set_query("driver", () => {
+                        return {
+                            filters: [
+                                ["name", "in", options.map(d => d.value)]
+                            ]
+                        };
+                    });
+
+                }
+            }
+        });
+    }
+},
+
 
 	refresh(frm) {
 

@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:MA-{date}-{#####}",
  "creation": "2025-05-13 14:22:12.062132",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -59,7 +60,9 @@
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Activity Date"
+   "in_list_view": 1,
+   "label": "Activity Date",
+   "reqd": 1
   },
   {
    "fieldname": "project",
@@ -113,10 +116,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-13 14:23:01.947373",
+ "modified": "2025-05-19 14:26:35.029882",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Maintenance Activity",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
