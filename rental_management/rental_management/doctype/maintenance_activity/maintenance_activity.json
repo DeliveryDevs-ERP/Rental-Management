@@ -6,6 +6,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "existing_maintenance",
+  "section_break_gkpi",
   "vehicle",
   "vehicle_type",
   "shift",
@@ -111,12 +113,22 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "existing_maintenance",
+   "fieldtype": "Check",
+   "label": "Existing Maintenance"
+  },
+  {
+   "fieldname": "section_break_gkpi",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-19 14:26:35.029882",
+ "modified": "2025-05-20 15:13:31.346059",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Maintenance Activity",

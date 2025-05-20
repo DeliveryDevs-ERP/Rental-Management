@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:TA-{date}-{#####}",
  "creation": "2025-05-13 14:17:51.456817",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -125,7 +126,7 @@
    "default": "0",
    "fieldname": "post_fine",
    "fieldtype": "Check",
-   "label": "Post Fine"
+   "label": "Existing Fine"
   },
   {
    "fieldname": "section_break_gvlb",
@@ -141,10 +142,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-19 17:45:58.091317",
+ "modified": "2025-05-20 15:18:02.200520",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Traffic Fine or Accident",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

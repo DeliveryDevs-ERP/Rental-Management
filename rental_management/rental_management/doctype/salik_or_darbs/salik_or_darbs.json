@@ -109,7 +109,7 @@
    "default": "0",
    "fieldname": "post_salik",
    "fieldtype": "Check",
-   "label": "Post Salik"
+   "label": "Existing Salik"
   },
   {
    "fieldname": "section_break_mfed",
@@ -125,7 +125,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-19 17:38:41.606495",
+ "modified": "2025-05-20 15:12:13.234922",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Salik or Darbs",
