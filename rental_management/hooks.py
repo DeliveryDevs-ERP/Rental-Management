@@ -152,6 +152,15 @@ jinja = {
 # 	}
 # }
 
+doc_events = {
+    "Vehicle": {
+        "validate": "rental_management.rental_management.validations.vehicle_hooks.validate_vehicle"
+    },
+    "Driver": {
+        "validate": "rental_management.rental_management.validations.driver_hooks.validate_driver"
+    }
+}
+
 # Scheduled Tasks
 # ---------------
 

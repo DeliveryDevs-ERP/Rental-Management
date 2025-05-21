@@ -21,6 +21,10 @@
   "section_break_rqqw",
   "detail",
   "accident_detail",
+  "section_break_ucfa",
+  "closing_status",
+  "column_break_qljo",
+  "evidence",
   "section_break_kjdx",
   "amended_from"
  ],
@@ -120,7 +124,7 @@
    "fieldname": "fine_status",
    "fieldtype": "Select",
    "label": "Fine Status",
-   "options": "\nClaimable\nClaimed"
+   "options": "\nFaulty\nNot Faulty"
   },
   {
    "default": "0",
@@ -137,12 +141,31 @@
    "fieldtype": "Table",
    "label": "Accident Detail",
    "options": "Accident Logs"
+  },
+  {
+   "fieldname": "section_break_ucfa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "closing_status",
+   "fieldtype": "Select",
+   "label": "Closing Status",
+   "options": "\nPaid by Client\nPaid by Driver\nPaid by Company"
+  },
+  {
+   "fieldname": "column_break_qljo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "evidence",
+   "fieldtype": "Attach",
+   "label": "Evidence"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-20 15:18:02.200520",
+ "modified": "2025-05-21 22:44:23.584280",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Traffic Fine or Accident",
