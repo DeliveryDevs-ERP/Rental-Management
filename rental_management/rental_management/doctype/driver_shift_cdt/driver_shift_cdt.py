@@ -20,5 +20,6 @@ class Drivershiftcdt(Document):
 		parenttype: DF.Data
 		project: DF.Link | None
 		shift: DF.Link | None
+		vehicle: DF.Link | None
 	# end: auto-generated types
 	pass

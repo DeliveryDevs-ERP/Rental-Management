@@ -36,12 +36,26 @@ class DriverMovement(Document):
                 self.edit_shift_assignment()
         except Exception as e:
             frappe.db.rollback()
-            frappe.throw(_(f"Vehicle Movement submission failed due to: {str(e)}"))
+            frappe.throw(_(f"Driver Movement submission failed due to: {str(e)}"))
 
     def update_driver_shift_vehicle(self):
         vehicle_doc = frappe.get_doc("Vehicle", self.vehicle)
         driver_doc = frappe.get_doc("Driver", self.driver)
         if self.mobilization_status == "Mobilize":
+            shift_assignment = frappe.get_all(
+                "Shift Assignment",
+                filters={
+                    "employee": driver_doc.employee,
+                    "shift_type": self.shift,
+                    "end_date": ["in", [None, ""]],
+                    "docstatus": 1 
+                },
+                fields=["name", "custom_mobilization"]
+            )
+            
+            if len(shift_assignment) > 0:
+                frappe.throw(_(f"Driver already has Shift assignments of shift: {self.shift} with Movement id : {shift_assignment[0].custom_mobilization}. Make Driver demobalization first."))
+                
             if not self.vehicle:
                 frappe.throw(_("Vehicle is not specified."))
 
@@ -95,7 +109,7 @@ class DriverMovement(Document):
             new_driver_shifts = []
             found_driver = False
             for row in driver_doc.custom_shifts:
-                if row.mobilization == self.name or (row.shift == self.shift and row.project == self.project):
+                if row.movement == self.name or (row.shift == self.shift and row.project == self.project):
                     found_driver = True
                     continue
                 new_driver_shifts.append(row)
@@ -107,8 +121,8 @@ class DriverMovement(Document):
             for idx, row in enumerate(new_driver_shifts, start=1):
                 row.idx = idx
                 driver_doc.append("custom_shifts", row)
-
-            driver_doc.custom_state = "Idle"
+            if len(driver_doc.custom_shifts) == 0:
+                driver_doc.custom_state = "Idle"
             driver_doc.save(ignore_permissions=True)
 
     def create_shift_assignment(self):
@@ -143,14 +157,15 @@ class DriverMovement(Document):
             "Shift Assignment",
             filters={
                 "employee": driver_doc.employee,
+                "shift_type": self.shift,
                 "end_date": ["in", [None, ""]],
-                "docstatus": 1  # Submitted only
+                "docstatus": 1 
             },
             fields=["name"]
         )
 
         if not shift_assignment:
-            frappe.msgprint(_("No active Shift Assignment found to end."))
+            frappe.throw(_("No active Shift Assignment found to end."))
             return
 
         # Get and update the document
