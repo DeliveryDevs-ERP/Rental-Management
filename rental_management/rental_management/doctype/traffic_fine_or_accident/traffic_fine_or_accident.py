@@ -30,6 +30,7 @@ class TrafficFineorAccident(Document):
 		post_fine: DF.Check
 		project: DF.Link | None
 		shift: DF.Link | None
+		status: DF.Literal["", "Open", "Closed"]
 		vehicle: DF.Link | None
 		vehicle_type: DF.Data | None
 	# end: auto-generated types
@@ -63,8 +64,9 @@ class TrafficFineorAccident(Document):
 	def on_submit(self):
 		if not self.evidence:
 			frappe.throw(_("You must attach Evidence before submitting this document."))
-
+			return
 		if not self.closing_status:
 			frappe.throw(_("You must select a Closing Status before submitting this document."))
-		
+			return
+		self.status = "Closed"
 

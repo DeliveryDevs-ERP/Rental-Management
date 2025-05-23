@@ -7,6 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "loa",
+  "cicpa_type",
+  "active",
+  "cicpa_status",
   "column_break_vbbs",
   "issue_date",
   "expiry_date",
@@ -37,13 +40,15 @@
    "fieldname": "vehicle",
    "fieldtype": "Link",
    "label": "Vehicle",
-   "options": "Vehicle"
+   "options": "Vehicle",
+   "read_only": 1
   },
   {
    "fieldname": "driver",
    "fieldtype": "Link",
    "label": "Driver",
-   "options": "Driver"
+   "options": "Driver",
+   "read_only": 1
   },
   {
    "fieldname": "issue_date",
@@ -53,6 +58,7 @@
    "reqd": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "expiry_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -76,18 +82,40 @@
    "fieldname": "loa",
    "fieldtype": "Link",
    "label": "LOA",
+   "link_filters": "[[\"LOA\",\"active\",\"=\",1]]",
    "options": "LOA",
    "reqd": 1
   },
   {
    "fieldname": "column_break_vbbs",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cicpa_type",
+   "fieldtype": "Select",
+   "label": "CICPA Type",
+   "options": "\nDriver\nVehicle"
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Active"
+  },
+  {
+   "default": "Active",
+   "fieldname": "cicpa_status",
+   "fieldtype": "Select",
+   "label": "CICPA Status",
+   "options": "\nActive\nExpired",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-21 21:49:28.427795",
+ "modified": "2025-05-23 16:42:39.931522",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "CICPA",

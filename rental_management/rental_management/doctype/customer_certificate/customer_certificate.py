@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class Drivercdt(Document):
+class CustomerCertificate(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,13 +14,6 @@ class Drivercdt(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		attachment: DF.Attach | None
-		certification_name: DF.Link
-		date_of_expiry: DF.Date
-		date_of_issue: DF.Date
-		parent: DF.Data
-		parentfield: DF.Data
-		parenttype: DF.Data
-		reference_no: DF.Data
+		type_name: DF.Data
 	# end: auto-generated types
 	pass

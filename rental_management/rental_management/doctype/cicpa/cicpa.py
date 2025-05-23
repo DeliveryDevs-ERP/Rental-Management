@@ -1,15 +1,20 @@
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 class CICPA(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
+
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		active: DF.Check
 		amended_from: DF.Link | None
+		cicpa_status: DF.Literal["", "Active", "Expired"]
+		cicpa_type: DF.Literal["", "Driver", "Vehicle"]
 		document: DF.Attach | None
 		driver: DF.Link | None
 		expiry_date: DF.Date
@@ -17,47 +22,72 @@ class CICPA(Document):
 		loa: DF.Link
 		vehicle: DF.Link | None
 	# end: auto-generated types
-	pass
-	# def on_change(self):
-	# 	if self.loa:
-	# 		loa_doc = frappe.get_doc("LOA", self.loa)
+ 
+	def on_submit(self):
+		if self.loa:
+			try:
+				loa_doc = frappe.get_doc("LOA", self.loa)
 
-	# 		cicpa_list = frappe.get_all(
-	# 			"CICPA",
-	# 			filters={"loa": self.loa},
-	# 			fields=["name", "vehicle", "driver"]
-	# 		)
+				if self.cicpa_type == "Vehicle":
+					loa_doc.total_created_vehicle_cicpa = (loa_doc.total_created_vehicle_cicpa or 0) + 1
 
-	# 		allocated_vehicle = sum(1 for d in cicpa_list if d.vehicle)
-	# 		allocated_driver = sum(1 for d in cicpa_list if d.driver)
+				elif self.cicpa_type == "Driver":
+					loa_doc.total_created_driver_cicpa = (loa_doc.total_created_driver_cicpa or 0) + 1
 
-	# 		loa_doc.allocated_vehicle_quota = allocated_vehicle
-	# 		loa_doc.remaining_vehicle_quota = loa_doc.total_vehicle_quota - allocated_vehicle
+				loa_doc.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(frappe.get_traceback(), "Error updating LOA CICPA count on submit")
+				frappe.throw(_("Failed to update LOA record: {0}").format(str(e)))
 
-	# 		loa_doc.allocated_driver_quota = allocated_driver
-	# 		loa_doc.remaining_driver_quota = loa_doc.total_driver_quota - allocated_driver
+	def on_trash(self):
+		if self.loa:
+			try:
+				loa_doc = frappe.get_doc("LOA", self.loa)
 
-	# 		loa_doc.save(ignore_permissions=True)
-	# 		frappe.db.commit()
+				if self.cicpa_type == "Vehicle" and loa_doc.total_created_vehicle_cicpa:
+					loa_doc.total_created_vehicle_cicpa = max(0, (loa_doc.total_created_vehicle_cicpa or 0) - 1)
 
-	# def validate(self):
-	# 	if self.loa:
-	# 		loa_doc = frappe.get_doc("LOA", self.loa)
+				elif self.cicpa_type == "Driver" and loa_doc.total_created_driver_cicpa:
+					loa_doc.total_created_driver_cicpa = max(0, (loa_doc.total_created_driver_cicpa or 0) - 1)
 
-	# 		cicpa_list = frappe.get_all(
-	# 			"CICPA",
-	# 			filters={"loa": self.loa},
-	# 			fields=["name", "vehicle", "driver"]
-	# 		)
+				loa_doc.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(frappe.get_traceback(), "Error updating LOA CICPA count on delete")
+				frappe.throw(_("Failed to update LOA record during deletion: {0}").format(str(e)))
 
-	# 		allocated_vehicle = sum(1 for d in cicpa_list if d.vehicle)
-	# 		allocated_driver = sum(1 for d in cicpa_list if d.driver)
+	def on_change(self):
+		# --- Update Vehicle Certification if cicpa_type is Vehicle ---
+		if self.cicpa_type == "Vehicle" and self.vehicle:
+			try:
+				vehicle_doc = frappe.get_doc("Vehicle", self.vehicle)
+				updated = False
 
-	# 		loa_doc.allocated_vehicle_quota = allocated_vehicle
-	# 		loa_doc.remaining_vehicle_quota = loa_doc.total_vehicle_quota - allocated_vehicle
+				for row in vehicle_doc.get("custom_vehicle_certifications", []):
+					if row.certification_name == "CICPA" and row.reference_no == self.name:
+						row.date_of_expiry = self.expiry_date
+						updated = True
+						break
 
-	# 		loa_doc.allocated_driver_quota = allocated_driver
-	# 		loa_doc.remaining_driver_quota = loa_doc.total_driver_quota - allocated_driver
+				if updated:
+					vehicle_doc.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(frappe.get_traceback(), "Error updating CICPA expiry date in Vehicle")
+				frappe.throw(_("Failed to update CICPA expiry date in Vehicle: {0}").format(str(e)))
 
-	# 		loa_doc.save(ignore_permissions=True)
-	# 		frappe.db.commit()
+		# --- Update Driver Certification if cicpa_type is Driver ---
+		if self.cicpa_type == "Driver" and self.driver:
+			try:
+				driver_doc = frappe.get_doc("Driver", self.driver)
+				updated = False
+
+				for row in driver_doc.get("custom_certification_list", []):
+					if row.certification_name == "CICPA" and row.reference_no == self.name:
+						row.date_of_expiry = self.expiry_date
+						updated = True
+						break
+
+				if updated:
+					driver_doc.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(frappe.get_traceback(), "Error updating CICPA expiry date in Driver")
+				frappe.throw(_("Failed to update CICPA expiry date in Driver: {0}").format(str(e)))

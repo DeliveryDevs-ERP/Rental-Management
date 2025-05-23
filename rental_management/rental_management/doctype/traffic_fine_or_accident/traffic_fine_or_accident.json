@@ -7,6 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "post_fine",
+  "column_break_rdey",
+  "status",
   "section_break_gvlb",
   "vehicle",
   "vehicle_type",
@@ -46,7 +48,7 @@
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
-   "options": "Shift Assignment"
+   "options": "Shift Type"
   },
   {
    "fieldname": "driver",
@@ -93,7 +95,7 @@
   {
    "fieldname": "detail",
    "fieldtype": "Table",
-   "label": "Detail",
+   "label": "Fine Detail",
    "options": "Fines cdt"
   },
   {
@@ -123,7 +125,7 @@
   {
    "fieldname": "fine_status",
    "fieldtype": "Select",
-   "label": "Fine Status",
+   "label": "Fine Type",
    "options": "\nFaulty\nNot Faulty"
   },
   {
@@ -160,12 +162,24 @@
    "fieldname": "evidence",
    "fieldtype": "Attach",
    "label": "Evidence"
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Fine Status",
+   "options": "\nOpen\nClosed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rdey",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-21 22:44:23.584280",
+ "modified": "2025-05-23 17:21:32.803354",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Traffic Fine or Accident",

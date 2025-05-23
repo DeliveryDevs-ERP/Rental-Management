@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 
 def validate_vehicle(doc, method):
     loa_to_recalc = None
@@ -7,6 +8,15 @@ def validate_vehicle(doc, method):
     cicpa_doc = None
 
     if doc.custom_cicpa:
+        
+        if hasattr(doc, "custom_vehicle_certifications"):
+            cicpa_exists = any(
+            row.certification_name == "CICPA" and row.reference_no == doc.custom_cicpa
+            for row in doc.custom_vehicle_certifications
+            )
+            if cicpa_exists:
+                return
+
         try:
             cicpa_doc = frappe.get_doc("CICPA", doc.custom_cicpa)
             loa_to_recalc = cicpa_doc.loa

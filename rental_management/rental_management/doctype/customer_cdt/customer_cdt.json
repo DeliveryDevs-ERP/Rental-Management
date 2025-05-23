@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-04-22 14:01:49.430481",
+ "creation": "2025-05-23 17:28:18.341564",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -18,7 +18,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Certification Name",
-   "options": "Driver Certification Type",
+   "options": "Customer Certificate",
    "reqd": 1
   },
   {
@@ -52,10 +52,10 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-23 16:57:03.576415",
+ "modified": "2025-05-23 17:30:55.017697",
  "modified_by": "Administrator",
  "module": "Rental Management",
- "name": "Driver cdt",
+ "name": "Customer cdt",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

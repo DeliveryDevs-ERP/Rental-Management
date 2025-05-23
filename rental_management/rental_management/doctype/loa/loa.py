@@ -15,17 +15,26 @@ class LOA(Document):
 		from frappe.types import DF
 		from rental_management.rental_management.doctype.loa_locations_cdt.loa_locations_cdt import LOAlocationscdt
 
+		active: DF.Check
 		allocated_driver_quota: DF.Int
 		allocated_vehicle_quota: DF.Int
 		amended_from: DF.Link | None
-		document: DF.Attach
+		contract_number: DF.Data
+		document: DF.Attach | None
 		end_user: DF.Data
 		expiry_date: DF.Date
 		issue_date: DF.Date
 		issuing_authority: DF.Link
+		license_expiry_date: DF.Date
+		license_issue_date: DF.Date
+		loa_status: DF.Literal["", "Active", "Expired"]
 		locations: DF.Table[LOAlocationscdt]
+		mother_attachment: DF.Attach | None
+		ref_no: DF.Data
 		remaining_driver_quota: DF.Int
 		remaining_vehicle_quota: DF.Int
+		total_created_driver_cicpa: DF.Int
+		total_created_vehicle_cicpa: DF.Int
 		total_driver_quota: DF.Int
 		total_vehicle_quota: DF.Int
 	# end: auto-generated types
