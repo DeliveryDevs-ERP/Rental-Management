@@ -94,7 +94,8 @@
    "fieldname": "cicpa_type",
    "fieldtype": "Select",
    "label": "CICPA Type",
-   "options": "\nDriver\nVehicle"
+   "options": "\nDriver\nVehicle",
+   "set_only_once": 1
   },
   {
    "default": "1",
@@ -115,7 +116,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-23 16:42:39.931522",
+ "modified": "2025-05-26 13:23:09.309383",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "CICPA",
