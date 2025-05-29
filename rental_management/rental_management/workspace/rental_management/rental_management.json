@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Rx7nmbyWI0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Rental Management</span>\",\"col\":12}},{\"id\":\"tgtjWdK5wy\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Certificates\",\"col\":4}},{\"id\":\"XPUEGBVwDM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"GTnHvl86wL\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"With Client Vehicles\",\"col\":4}},{\"id\":\"h_jJ6ZG8_g\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Idle Vehicles\",\"col\":4}},{\"id\":\"JqdJLEyUoH\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Vehicles at Workshop\",\"col\":4}},{\"id\":\"ULEHfik0yK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Idle Drivers\",\"col\":4}},{\"id\":\"HTQy4KqpEO\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"With Client Drivers\",\"col\":4}},{\"id\":\"Iu9mPyN7d-\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"FxcDfqXUWz\",\"type\":\"card\",\"data\":{\"card_name\":\"Documents\",\"col\":4}}]",
+ "content": "[{\"id\":\"Rx7nmbyWI0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Rental Management</span>\",\"col\":12}},{\"id\":\"tgtjWdK5wy\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Certificates\",\"col\":4}},{\"id\":\"jktKRD5Av6\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Expire in 60 Days\",\"col\":4}},{\"id\":\"iGwCkdK1tv\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Expire in 30 Days\",\"col\":4}},{\"id\":\"G1NbbJmaeK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Expire in 10 Days\",\"col\":4}},{\"id\":\"UWYjtcBb0o\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Expired Certificates\",\"col\":4}},{\"id\":\"XPUEGBVwDM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"GTnHvl86wL\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"With Client Vehicles\",\"col\":4}},{\"id\":\"h_jJ6ZG8_g\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Idle Vehicles\",\"col\":4}},{\"id\":\"JqdJLEyUoH\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Vehicles at Workshop\",\"col\":4}},{\"id\":\"ULEHfik0yK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Idle Drivers\",\"col\":4}},{\"id\":\"HTQy4KqpEO\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"With Client Drivers\",\"col\":4}},{\"id\":\"Iu9mPyN7d-\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"FxcDfqXUWz\",\"type\":\"card\",\"data\":{\"card_name\":\"Documents\",\"col\":4}}]",
  "creation": "2025-05-26 15:43:38.655529",
  "custom_blocks": [],
  "docstatus": 0,
@@ -113,7 +113,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-05-29 17:27:50.712362",
+ "modified": "2025-05-29 17:41:12.755517",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Rental Management",
@@ -141,6 +141,22 @@
   {
    "label": "Total Certificates",
    "number_card_name": "Total Certificates-1"
+  },
+  {
+   "label": "Expired Certificates",
+   "number_card_name": "Expired Certificates"
+  },
+  {
+   "label": "Expire in 60 Days",
+   "number_card_name": "Expire in 60 Days"
+  },
+  {
+   "label": "Expire in 30 Days",
+   "number_card_name": "Expire in 30 Days"
+  },
+  {
+   "label": "Expire in 10 Days",
+   "number_card_name": "Expire in 10 Days"
   }
  ],
  "owner": "Administrator",

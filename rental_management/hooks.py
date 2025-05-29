@@ -158,6 +158,9 @@ doc_events = {
     },
     "Driver": {
         "validate": "rental_management.rental_management.validations.driver_hooks.validate_driver"
+    },
+    "Customer": {
+        "validate": "rental_management.rental_management.validations.customer_hooks.validate_customer"
     }
 }
 

@@ -1,7 +1,7 @@
 # Copyright (c) 2025, osama.ahmed@deliverydevs.com and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -23,4 +23,33 @@ class ExistingCertificates(Document):
 		row_name: DF.Data | None
 		vehicle: DF.Link | None
 	# end: auto-generated types
-	pass
+	
+	def validate(self):
+		if not self.row_name or not self.date_of_expiry:
+			return
+
+		if self.get_doc_before_save() and self.date_of_expiry != self.get_doc_before_save().date_of_expiry:
+			target_doctype = None
+			parent_doc = None
+
+			if self.vehicle:
+				target_doctype = "Vehicle"
+				parent_doc = frappe.get_doc("Vehicle", self.vehicle)
+				child_table_field = "custom_vehicle_certifications"
+
+			elif self.customer:
+				target_doctype = "Customer"
+				parent_doc = frappe.get_doc("Customer", self.customer)
+				child_table_field = "custom_customer_certificates"
+
+			elif self.driver:
+				target_doctype = "Driver"
+				parent_doc = frappe.get_doc("Driver", self.driver)
+				child_table_field = "custom_driver_certifications"
+
+			if parent_doc and hasattr(parent_doc, child_table_field):
+				for row in getattr(parent_doc, child_table_field):
+					if row.name == self.row_name:
+						row.date_of_expiry = self.date_of_expiry
+						parent_doc.save(ignore_permissions=True)
+						break
