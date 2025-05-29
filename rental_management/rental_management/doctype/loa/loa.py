@@ -20,8 +20,9 @@ class LOA(Document):
 		allocated_vehicle_quota: DF.Int
 		amended_from: DF.Link | None
 		contract_number: DF.Data
+		contract_year: DF.Int
 		document: DF.Attach | None
-		end_user: DF.Data
+		end_user: DF.Link
 		expiry_date: DF.Date
 		issue_date: DF.Date
 		issuing_authority: DF.Link

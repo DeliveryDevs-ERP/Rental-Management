@@ -1,0 +1,101 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{certificate_name}-{customer}{driver}{vehicle}-{######}",
+ "creation": "2025-05-29 16:41:23.351685",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "vehicle",
+  "driver",
+  "section_break_dokm",
+  "certificate_name",
+  "reference_no",
+  "date_of_issue",
+  "date_of_expiry",
+  "row_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "read_only": 1
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "label": "Driver",
+   "options": "Driver",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dokm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "Reference No.",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_of_issue",
+   "fieldtype": "Date",
+   "label": "Date of Issue",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_of_expiry",
+   "fieldtype": "Date",
+   "label": "Date of Expiry"
+  },
+  {
+   "fieldname": "row_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Row Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "certificate_name",
+   "fieldtype": "Data",
+   "label": "Certificate Name",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-29 17:08:05.734177",
+ "modified_by": "Administrator",
+ "module": "Rental Management",
+ "name": "Existing Certificates",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

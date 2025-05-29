@@ -6,7 +6,7 @@ def validate_driver(doc, method):
     linked_cicpa_name = None
     remarks = ""
     cicpa_doc = None
-
+    sync_existing_certificates(doc)
     if doc.custom_cicpa:
         
         if hasattr(doc, "custom_certification_list"):
@@ -86,3 +86,31 @@ def validate_driver(doc, method):
             "remarks": remarks,
             "docstatus": 1
         }).insert(ignore_permissions=True)
+
+
+def sync_existing_certificates(doc):
+    for row in getattr(doc, "custom_certification_list", []):
+        existing = frappe.get_all(
+            "Existing Certificates",
+            filters={
+                "driver": doc.name,
+                "certificate_name": row.certification_name,
+                "reference_no": row.reference_no
+            },
+            fields=["name", "date_of_expiry"]
+        )
+
+        if existing:
+            existing_cert = existing[0]
+            if str(existing_cert.date_of_expiry) != str(row.date_of_expiry):
+                frappe.db.set_value("Existing Certificates", existing_cert.name, "date_of_expiry", row.date_of_expiry)
+        else:
+            frappe.get_doc({
+                "doctype": "Existing Certificates",
+                "driver": doc.name,
+                "certificate_name": row.certification_name,
+                "reference_no": row.reference_no,
+                "date_of_issue": row.date_of_issue,
+                "date_of_expiry": row.date_of_expiry,
+                "row_name": row.name
+            }).insert(ignore_permissions=True)

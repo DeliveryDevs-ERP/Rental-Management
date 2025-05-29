@@ -11,6 +11,7 @@
   "end_user",
   "ref_no",
   "loa_status",
+  "contract_year",
   "column_break_dhsn",
   "issue_date",
   "expiry_date",
@@ -62,8 +63,9 @@
   },
   {
    "fieldname": "end_user",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Contract Auth",
+   "options": "Contract Authority",
    "reqd": 1
   },
   {
@@ -237,6 +239,12 @@
    "fieldtype": "Int",
    "label": "Total Created Driver CICPA",
    "read_only": 1
+  },
+  {
+   "fieldname": "contract_year",
+   "fieldtype": "Int",
+   "label": "Contract Year",
+   "non_negative": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -247,7 +255,7 @@
    "link_fieldname": "loa"
   }
  ],
- "modified": "2025-05-23 17:07:01.731822",
+ "modified": "2025-05-29 15:37:40.294516",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "LOA",
