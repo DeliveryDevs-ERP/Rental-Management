@@ -26,17 +26,18 @@ class CICPA(Document):
 	def validate(self):
 		if not self.loa or not self.cicpa_type:
 			return
+
 		loa_doc = frappe.get_doc("LOA", self.loa)
 
 		if self.cicpa_type == "Vehicle":
-			if loa_doc.remaining_vehicle_quota <= 0:
-				frappe.throw(_("Cannot create CICPA: No remaining vehicle quota in LOA {0}.").format(loa_doc.name))
+			if loa_doc.remaining_vehicle_quota <= 0 or loa_doc.total_created_vehicle_cicpa >= loa_doc.total_vehicle_quota:
+				frappe.throw(_("Cannot create CICPA: Vehicle quota exhausted or invalid in LOA {0}.").format(loa_doc.name))
 
 		elif self.cicpa_type == "Driver":
-			if loa_doc.remaining_driver_quota <= 0:
-				frappe.throw(_("Cannot create CICPA: No remaining driver quota in LOA {0}.").format(loa_doc.name))
+			if loa_doc.remaining_driver_quota <= 0 or loa_doc.total_created_driver_cicpa >= loa_doc.total_driver_quota:
+				frappe.throw(_("Cannot create CICPA: Driver quota exhausted or invalid in LOA {0}.").format(loa_doc.name))
 
- 
+		
 	def on_submit(self):
 		if self.loa:
 			try:

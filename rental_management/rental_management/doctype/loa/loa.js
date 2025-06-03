@@ -5,7 +5,7 @@ frappe.ui.form.on("LOA", {
     refresh: function(frm) {
         if (frm.doc.docstatus === 1) {
 
-            if (frm.doc.remaining_vehicle_quota > 0) {
+            if (frm.doc.total_created_vehicle_cicpa < frm.doc.total_vehicle_quota) {
                 frm.add_custom_button(__('Vehicle CICPA'), function() {
                     frappe.new_doc("CICPA", {
                         loa: frm.doc.name,
@@ -14,7 +14,7 @@ frappe.ui.form.on("LOA", {
                 }, __("Create"));
             }
 
-            if (frm.doc.remaining_driver_quota > 0) {
+            if (frm.doc.total_created_driver_cicpa < frm.doc.total_driver_quota) {
                 frm.add_custom_button(__('Driver CICPA'), function() {
                     frappe.new_doc("CICPA", {
                         loa: frm.doc.name,
