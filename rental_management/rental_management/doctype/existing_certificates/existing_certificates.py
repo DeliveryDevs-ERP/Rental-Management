@@ -19,6 +19,8 @@ class ExistingCertificates(Document):
 		date_of_expiry: DF.Date | None
 		date_of_issue: DF.Date | None
 		driver: DF.Link | None
+		employee: DF.Link | None
+		mark_as_not_renew: DF.Check
 		reference_no: DF.Data | None
 		row_name: DF.Data | None
 		vehicle: DF.Link | None

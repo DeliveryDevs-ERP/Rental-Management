@@ -26,14 +26,16 @@ class LOA(Document):
 		expiry_date: DF.Date
 		issue_date: DF.Date
 		issuing_authority: DF.Link
-		license_expiry_date: DF.Date
-		license_issue_date: DF.Date
+		license_expiry_date: DF.Date | None
+		license_issue_date: DF.Date | None
 		loa_status: DF.Literal["", "Active", "Expired"]
 		locations: DF.Table[LOAlocationscdt]
 		mother_attachment: DF.Attach | None
 		ref_no: DF.Data
 		remaining_driver_quota: DF.Int
 		remaining_vehicle_quota: DF.Int
+		total_cancelled_driver_cicpa: DF.Int
+		total_cancelled_vehicle_cicpa: DF.Int
 		total_created_driver_cicpa: DF.Int
 		total_created_vehicle_cicpa: DF.Int
 		total_driver_quota: DF.Int

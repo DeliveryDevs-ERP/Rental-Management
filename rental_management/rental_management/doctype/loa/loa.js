@@ -1,25 +1,38 @@
 // Copyright (c) 2025, osama.ahmed@deliverydevs.com and contributors
 // For license information, please see license.txt
 
-// Copyright (c) 2025, osama.ahmed@deliverydevs.com and contributors
-// For license information, please see license.txt
-
 frappe.ui.form.on("LOA", {
     refresh: function(frm) {
-        if (!frm.is_new() && frm.doc.docstatus === 1) { 
-            frm.add_custom_button(__('Vehicle CICPA'), function() {
-                frappe.new_doc("CICPA", {
-                    loa: frm.doc.name,
-                    cicpa_type: "Vehicle"
-                });
-            }, __("Create"));  
+        if (frm.doc.docstatus === 1) {
 
-            frm.add_custom_button(__('Driver CICPA'), function() {
-                frappe.new_doc("CICPA", {
-                    loa: frm.doc.name,
-                    cicpa_type: "Driver"
-                });
-            }, __("Create"));  
+            if (frm.doc.remaining_vehicle_quota > 0) {
+                frm.add_custom_button(__('Vehicle CICPA'), function() {
+                    frappe.new_doc("CICPA", {
+                        loa: frm.doc.name,
+                        cicpa_type: "Vehicle"
+                    });
+                }, __("Create"));
+            }
+
+            if (frm.doc.remaining_driver_quota > 0) {
+                frm.add_custom_button(__('Driver CICPA'), function() {
+                    frappe.new_doc("CICPA", {
+                        loa: frm.doc.name,
+                        cicpa_type: "Driver"
+                    });
+                }, __("Create"));
+            }
+
         }
-    }
+    },
+
+    total_vehicle_quota: function(frm) {
+		if (!frm.doc.__islocal) return;
+		frm.set_value("remaining_vehicle_quota", frm.doc.total_vehicle_quota || 0);
+	},
+
+	total_driver_quota: function(frm) {
+		if (!frm.doc.__islocal) return;
+		frm.set_value("remaining_driver_quota", frm.doc.total_driver_quota || 0);
+	}
 });

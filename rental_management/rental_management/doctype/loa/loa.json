@@ -27,6 +27,9 @@
   "column_break_twtj",
   "total_created_vehicle_cicpa",
   "total_created_driver_cicpa",
+  "column_break_uxdw",
+  "total_cancelled_vehicle_cicpa",
+  "total_cancelled_driver_cicpa",
   "column_break_wbgl",
   "allocated_vehicle_quota",
   "allocated_driver_quota",
@@ -134,29 +137,26 @@
   },
   {
    "allow_on_submit": 1,
-   "default": "0",
    "fieldname": "remaining_vehicle_quota",
    "fieldtype": "Int",
    "label": "Remaining Vehicle Quota",
    "non_negative": 1,
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
-   "default": "0",
    "fieldname": "remaining_driver_quota",
    "fieldtype": "Int",
    "label": "Remaining Driver Quota",
    "non_negative": 1,
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "section_break_gddt",
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "locations",
    "fieldtype": "Table",
    "label": "Locations",
@@ -195,14 +195,14 @@
   {
    "fieldname": "license_issue_date",
    "fieldtype": "Date",
-   "label": "Commercial License Issue Date",
-   "reqd": 1
+   "hidden": 1,
+   "label": "Commercial License Issue Date"
   },
   {
    "fieldname": "license_expiry_date",
    "fieldtype": "Date",
-   "label": "Commercial License Expiry Date",
-   "reqd": 1
+   "hidden": 1,
+   "label": "Commercial License Expiry Date"
   },
   {
    "default": "1",
@@ -245,6 +245,26 @@
    "fieldtype": "Int",
    "label": "Contract Year",
    "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_uxdw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "total_cancelled_vehicle_cicpa",
+   "fieldtype": "Int",
+   "label": "Cancelled Vehicle CICPA",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "total_cancelled_driver_cicpa",
+   "fieldtype": "Int",
+   "label": "Cancelled Driver CICPA",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -255,7 +275,7 @@
    "link_fieldname": "loa"
   }
  ],
- "modified": "2025-05-29 15:37:40.294516",
+ "modified": "2025-06-03 15:14:16.111573",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "LOA",

@@ -13,7 +13,7 @@ class CICPA(Document):
 
 		active: DF.Check
 		amended_from: DF.Link | None
-		cicpa_status: DF.Literal["", "Active", "Expired"]
+		cicpa_status: DF.Literal["", "Active", "Cancelled", "Expired"]
 		cicpa_type: DF.Literal["", "Driver", "Vehicle"]
 		document: DF.Attach | None
 		driver: DF.Link | None
@@ -22,6 +22,20 @@ class CICPA(Document):
 		loa: DF.Link
 		vehicle: DF.Link | None
 	# end: auto-generated types
+ 
+	def validate(self):
+		if not self.loa or not self.cicpa_type:
+			return
+		loa_doc = frappe.get_doc("LOA", self.loa)
+
+		if self.cicpa_type == "Vehicle":
+			if loa_doc.remaining_vehicle_quota <= 0:
+				frappe.throw(_("Cannot create CICPA: No remaining vehicle quota in LOA {0}.").format(loa_doc.name))
+
+		elif self.cicpa_type == "Driver":
+			if loa_doc.remaining_driver_quota <= 0:
+				frappe.throw(_("Cannot create CICPA: No remaining driver quota in LOA {0}.").format(loa_doc.name))
+
  
 	def on_submit(self):
 		if self.loa:

@@ -161,6 +161,9 @@ doc_events = {
     },
     "Customer": {
         "validate": "rental_management.rental_management.validations.customer_hooks.validate_customer"
+    },
+    "Employee": {
+        "validate": "rental_management.rental_management.validations.employee_hooks.validate_employee"
     }
 }
 

@@ -109,14 +109,14 @@
    "fieldname": "cicpa_status",
    "fieldtype": "Select",
    "label": "CICPA Status",
-   "options": "\nActive\nExpired",
+   "options": "\nActive\nCancelled\nExpired",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-26 13:23:09.309383",
+ "modified": "2025-06-02 14:31:03.683037",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "CICPA",

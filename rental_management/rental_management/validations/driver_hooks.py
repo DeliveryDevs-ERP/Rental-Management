@@ -8,11 +8,10 @@ def validate_driver(doc, method):
     cicpa_doc = None
     sync_existing_certificates(doc)
     if doc.custom_cicpa:
-        
         if hasattr(doc, "custom_certification_list"):
             cicpa_exists = any(
-            row.certification_name == "CICPA" and row.reference_no == doc.custom_cicpa
-            for row in doc.custom_certification_list
+                row.certification_name == "CICPA" and row.reference_no == doc.custom_cicpa
+                for row in doc.custom_certification_list
             )
             if cicpa_exists:
                 return
@@ -45,11 +44,12 @@ def validate_driver(doc, method):
         cicpa_docs = frappe.get_all("CICPA", filters={"driver": doc.name}, fields=["name", "loa"])
         for cicpa in cicpa_docs:
             frappe.db.set_value("CICPA", cicpa.name, "driver", None)
+            frappe.db.set_value("CICPA", cicpa.name, "cicpa_status", "Cancelled")
+            frappe.db.set_value("CICPA", cicpa.name, "active", "0")
             loa_to_recalc = cicpa.loa or loa_to_recalc
             linked_cicpa_name = cicpa.name
             remarks = "Removing Driver"
 
-            # Remove matching certification row
             if hasattr(doc, "custom_certification_list"):
                 doc.custom_certification_list = [
                     row for row in doc.custom_certification_list
@@ -59,22 +59,31 @@ def validate_driver(doc, method):
     if loa_to_recalc:
         cicpa_list = frappe.get_all(
             "CICPA",
-            filters={"loa": loa_to_recalc},
-            fields=["vehicle", "driver"]
+            filters={
+                "loa": loa_to_recalc,
+                "cicpa_type": "Driver"
+            },
+            fields=["name", "driver", "cicpa_status"]
         )
 
-        allocated_vehicle = sum(1 for d in cicpa_list if d.vehicle)
-        allocated_driver = sum(1 for d in cicpa_list if d.driver)
+        allocated_driver = 0
+        cancelled_driver = 0
+
+        for d in cicpa_list:
+            if d.cicpa_status == "Cancelled":
+                cancelled_driver += 1
+            elif d.driver:
+                allocated_driver += 1
 
         loa_doc = frappe.get_doc("LOA", loa_to_recalc)
-        loa_doc.allocated_vehicle_quota = allocated_vehicle
-        loa_doc.remaining_vehicle_quota = loa_doc.total_vehicle_quota - allocated_vehicle
         loa_doc.allocated_driver_quota = allocated_driver
-        loa_doc.remaining_driver_quota = loa_doc.total_driver_quota - allocated_driver
+        loa_doc.total_cancelled_driver_cicpa = cancelled_driver
+        loa_doc.remaining_driver_quota = (
+            loa_doc.total_driver_quota - allocated_driver - cancelled_driver
+        )
 
         loa_doc.save(ignore_permissions=True)
 
-    # Create CICPA Log
     if linked_cicpa_name and remarks:
         cicpa_record = frappe.get_doc("CICPA", linked_cicpa_name)
         frappe.get_doc({
@@ -86,7 +95,6 @@ def validate_driver(doc, method):
             "remarks": remarks,
             "docstatus": 1
         }).insert(ignore_permissions=True)
-
 
 def sync_existing_certificates(doc):
     for row in getattr(doc, "custom_certification_list", []):

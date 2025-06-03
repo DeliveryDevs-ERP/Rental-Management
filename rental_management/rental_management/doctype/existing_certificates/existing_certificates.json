@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{certificate_name}-{customer}{driver}{vehicle}-{######}",
+ "autoname": "format:{certificate_name}-{customer}{driver}{vehicle}{employee}-{######}",
  "creation": "2025-05-29 16:41:23.351685",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -9,6 +9,9 @@
   "customer",
   "vehicle",
   "driver",
+  "employee",
+  "column_break_rfwz",
+  "mark_as_not_renew",
   "section_break_dokm",
   "certificate_name",
   "reference_no",
@@ -71,11 +74,28 @@
    "fieldtype": "Data",
    "label": "Certificate Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rfwz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "mark_as_not_renew",
+   "fieldtype": "Check",
+   "label": "Mark as Not Renew"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-29 17:08:05.734177",
+ "modified": "2025-06-02 16:00:02.575390",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Existing Certificates",
