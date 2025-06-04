@@ -89,7 +89,7 @@ def validate_employee(doc, method):
 
 
 def sync_existing_certificates(doc):
-    for row in getattr(doc, "certifications", []):
+    for row in getattr(doc, "custom_certificates", []):
         existing = frappe.get_all(
             "Existing Certificates",
             filters={
