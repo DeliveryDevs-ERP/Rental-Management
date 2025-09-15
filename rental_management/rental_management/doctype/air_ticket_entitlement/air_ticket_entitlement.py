@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class Employeecdt(Document):
+class AirTicketEntitlement(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,14 +14,11 @@ class Employeecdt(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		attachment: DF.Attach | None
-		certification_name: DF.Link
-		date_of_expiry: DF.Date
-		date_of_issue: DF.Date
-		parent: DF.Data
-		parentfield: DF.Data
-		parenttype: DF.Data
-		reference_no: DF.Data
-		status: DF.Literal["", "Active", "Expired"]
+		amended_from: DF.Link | None
+		employee: DF.Link
+		employee_onboarding_date: DF.Date | None
+		status: DF.Literal["", "Pending", "Paid"]
+		ticket_amount: DF.Currency
+		ticket_entitlement_duration: DF.Data | None
 	# end: auto-generated types
 	pass

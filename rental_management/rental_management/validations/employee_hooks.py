@@ -1,93 +1,42 @@
 import frappe
 from frappe import _
 
+
+# Normalized lookup to keep user-friendly display names in messages
+REQUIRED_CERTS_DISPLAY = ["Passport no", "Emirates ID", "Residence Permit", "Work Permit"]
+REQUIRED_CERTS_MAP = {c.strip().lower(): c for c in REQUIRED_CERTS_DISPLAY}
+REQUIRED_CERTS_NORMALIZED = set(REQUIRED_CERTS_MAP.keys())
+
+def _normalize(s: str) -> str:
+    return (s or "").strip().lower()
+
+
 def validate_employee(doc, method):
-    # loa_to_recalc = None
-    # linked_cicpa_name = None
-    # remarks = ""
-    # cicpa_doc = None
+    _validate_required_certificates(doc)
     sync_existing_certificates(doc)
-    # if doc.custom_cicpa:
+    create_air_ticket_entitlement_from_employee(doc)
+
+def _validate_required_certificates(doc):
+    """
+    Build a set of certification_name values from the child table and verify
+    that it includes: Passport no, Emirates ID, Residence Permit, Work Permit.
+    """
+    present = {
+        _normalize(row.certification_name)
+        for row in getattr(doc, "custom_certificates", [])
+        if getattr(row, "certification_name", None)
+    }
+
+    missing_norm = [req for req in REQUIRED_CERTS_NORMALIZED if req not in present]
+    if missing_norm:
+        # Convert back to their display-cased names
+        missing_display = [REQUIRED_CERTS_MAP[m] for m in missing_norm]
+        frappe.throw(
+            _("Missing required certificates: {0}").format(", ".join(missing_display)),
+            title=_("Incomplete Certificates Error")
+        )
         
-    #     if hasattr(doc, "custom_certification_list"):
-    #         cicpa_exists = any(
-    #         row.certification_name == "CICPA" and row.reference_no == doc.custom_cicpa
-    #         for row in doc.custom_certification_list
-    #         )
-    #         if cicpa_exists:
-    #             return
-
-    #     try:
-    #         cicpa_doc = frappe.get_doc("CICPA", doc.custom_cicpa)
-    #         loa_to_recalc = cicpa_doc.loa
-    #         linked_cicpa_name = cicpa_doc.name
-    #     except frappe.DoesNotExistError:
-    #         pass
-
-    # if doc.custom_has_cicpa and cicpa_doc:
-    #     frappe.db.set_value("CICPA", cicpa_doc.name, "driver", doc.name)
-    #     remarks = "Adding Driver"
-
-    #     if hasattr(doc, "custom_certification_list"):
-    #         already_exists = any(
-    #             row.reference_no == cicpa_doc.name
-    #             for row in doc.custom_certification_list
-    #         )
-    #         if not already_exists:
-    #             new_row = doc.append("custom_certification_list", {})
-    #             new_row.certification_name = "CICPA"
-    #             new_row.date_of_issue = cicpa_doc.issue_date
-    #             new_row.date_of_expiry = cicpa_doc.expiry_date
-    #             new_row.attachment = cicpa_doc.document
-    #             new_row.reference_no = cicpa_doc.name
-
-    # else:
-    #     cicpa_docs = frappe.get_all("CICPA", filters={"driver": doc.name}, fields=["name", "loa"])
-    #     for cicpa in cicpa_docs:
-    #         frappe.db.set_value("CICPA", cicpa.name, "driver", None)
-    #         loa_to_recalc = cicpa.loa or loa_to_recalc
-    #         linked_cicpa_name = cicpa.name
-    #         remarks = "Removing Driver"
-
-    #         # Remove matching certification row
-    #         if hasattr(doc, "custom_certification_list"):
-    #             doc.custom_certification_list = [
-    #                 row for row in doc.custom_certification_list
-    #                 if row.reference_no != cicpa.name
-    #             ]
-
-    # if loa_to_recalc:
-    #     cicpa_list = frappe.get_all(
-    #         "CICPA",
-    #         filters={"loa": loa_to_recalc},
-    #         fields=["vehicle", "driver"]
-    #     )
-
-    #     allocated_vehicle = sum(1 for d in cicpa_list if d.vehicle)
-    #     allocated_driver = sum(1 for d in cicpa_list if d.driver)
-
-    #     loa_doc = frappe.get_doc("LOA", loa_to_recalc)
-    #     loa_doc.allocated_vehicle_quota = allocated_vehicle
-    #     loa_doc.remaining_vehicle_quota = loa_doc.total_vehicle_quota - allocated_vehicle
-    #     loa_doc.allocated_driver_quota = allocated_driver
-    #     loa_doc.remaining_driver_quota = loa_doc.total_driver_quota - allocated_driver
-
-    #     loa_doc.save(ignore_permissions=True)
-
-    # Create CICPA Log
-    # if linked_cicpa_name and remarks:
-    #     cicpa_record = frappe.get_doc("CICPA", linked_cicpa_name)
-    #     frappe.get_doc({
-    #         "doctype": "CICPA Logs",
-    #         "cicpa": cicpa_record.name,
-    #         "loa": cicpa_record.loa,
-    #         "vehicle": cicpa_record.vehicle,
-    #         "driver": cicpa_record.driver,
-    #         "remarks": remarks,
-    #         "docstatus": 1
-    #     }).insert(ignore_permissions=True)
-
-
+        
 def sync_existing_certificates(doc):
     for row in getattr(doc, "custom_certificates", []):
         existing = frappe.get_all(
@@ -114,3 +63,72 @@ def sync_existing_certificates(doc):
                 "date_of_expiry": row.date_of_expiry,
                 "row_name": row.name
             }).insert(ignore_permissions=True)
+
+def create_air_ticket_entitlement_from_employee(doc, method=None):
+    """
+    On Employee validate:
+      - Find latest submitted Job Offer where job_applicant == employee.job_applicant
+      - Create & submit Air Ticket Entitlement for this employee
+        * employee_onboarding_date  = employee.date_of_joining
+        * ticket_amount             = job_offer.custom_air_ticket_entitlement_cash_amount
+        * ticket_entitlement_duration = job_offer.custom_air_ticket_entitlement_duration
+    """
+    # Need a linked Job Applicant to resolve the Job Offer
+    job_applicant = getattr(doc, "job_applicant", None)
+    if not job_applicant:
+        frappe.msgprint(
+            _("Ticket entitlement not created as Job Applicant is not mapped."),
+            alert=True,
+            indicator="orange",
+            title=_("Air Ticket Entitlement")
+        )
+        return
+
+    # Prefer a submitted Job Offer; fall back to latest if none submitted
+    job_offer = frappe.get_all(
+        "Job Offer",
+        filters={"job_applicant": job_applicant, "docstatus": 1},
+        fields=["name", "custom_air_ticket_entitlement_cash_amount", "custom_air_ticket_entitlement_duration"],
+        order_by="creation desc",
+        limit=1,
+    )
+    if not job_offer:
+        job_offer = frappe.get_all(
+            "Job Offer",
+            filters={"job_applicant": job_applicant},
+            fields=["name", "custom_air_ticket_entitlement_cash_amount", "custom_air_ticket_entitlement_duration", "docstatus"],
+            order_by="creation desc",
+            limit=1,
+        )
+    if not job_offer:
+        frappe.log_error(f"No Job Offer found for Employee {doc.name} (job_applicant={job_applicant})",
+                         "Air Ticket Entitlement (Employee.validate)")
+        return
+
+    jo = job_offer[0]
+    ticket_amount = jo.get("custom_air_ticket_entitlement_cash_amount")
+    duration_value = jo.get("custom_air_ticket_entitlement_duration")
+
+    # If neither value exists on Job Offer, skip quietly
+    if ticket_amount is None and duration_value in (None, ""):
+        return
+
+    # Upsert entitlement: if one exists for this employee, silent return
+    ent_name = frappe.db.get_value("Air Ticket Entitlement", {"employee": doc.name}, "name")
+    if ent_name:
+        return
+
+    # Create new entitlement
+    entitlement = frappe.get_doc({
+        "doctype": "Air Ticket Entitlement",
+        "employee": doc.name,
+        "employee_onboarding_date": doc.date_of_joining,
+        "ticket_amount": ticket_amount,
+        "ticket_entitlement_duration": duration_value,
+    })
+    entitlement.insert(ignore_permissions=True)
+    try:
+        entitlement.submit()
+    except Exception as e:
+        frappe.log_error(f"Failed to submit Air Ticket Entitlement {entitlement.name}: {e}",
+                         "Air Ticket Entitlement (Employee.validate)")

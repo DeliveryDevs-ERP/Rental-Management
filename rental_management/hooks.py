@@ -164,7 +164,7 @@ doc_events = {
     },
     "Employee": {
         "validate": "rental_management.rental_management.validations.employee_hooks.validate_employee"
-    }
+    },
 }
 
 # Scheduled Tasks

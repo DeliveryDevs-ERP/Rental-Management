@@ -10,7 +10,8 @@
   "reference_no",
   "date_of_issue",
   "date_of_expiry",
-  "attachment"
+  "attachment",
+  "status"
  ],
  "fields": [
   {
@@ -47,12 +48,20 @@
    "fieldtype": "Attach",
    "in_list_view": 1,
    "label": "Attachment"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nActive\nExpired"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-06-02 14:50:55.648329",
+ "modified": "2025-09-15 16:37:36.593618",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Employee cdt",
