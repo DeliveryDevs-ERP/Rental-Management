@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:ATE-{#####}",
  "creation": "2025-09-15 17:02:32.588223",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -70,10 +71,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-15 17:09:11.978827",
+ "modified": "2025-09-16 16:32:05.142878",
  "modified_by": "Administrator",
  "module": "Rental Management",
  "name": "Air Ticket Entitlement",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
