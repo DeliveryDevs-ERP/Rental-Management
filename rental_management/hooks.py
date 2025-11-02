@@ -165,6 +165,9 @@ doc_events = {
     "Employee": {
         "validate": "rental_management.rental_management.validations.employee_hooks.validate_employee"
     },
+    "Asset": {
+        "autoname": "rental_management.rental_management.scripts.autoname_assets.autoname_asset"
+    }
 }
 
 # Scheduled Tasks
