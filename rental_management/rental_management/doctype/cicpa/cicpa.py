@@ -108,6 +108,10 @@ class CICPA(Document):
 				frappe.throw(_("Failed to update CICPA expiry date in Driver: {0}").format(str(e)))
 
 	def before_cancel(self):
+
+		if self.loa:
+			self.db_set("loa", None, update_modified=False)
+
 		try:
 			cicpa_logs = frappe.get_all(
 				"CICPA Logs",
@@ -155,18 +159,8 @@ class CICPA(Document):
 				]
 
 				vehicle_doc.save(ignore_permissions=True)
-
-				# frappe.db.set_value(
-				# "CICPA",
-				# self.name,
-				# {
-				# 	"vehicle": None,
-				# 	"driver": None,
-				# 	"active": 0,
-				# 	"cicpa_status": "Cancelled"
-				# },
-				# update_modified=False
-				# )
+				if self.vehicle:
+					self.db_set("vehicle", None, update_modified=False)
 
 			except Exception as e:
 				frappe.log_error(
@@ -193,18 +187,8 @@ class CICPA(Document):
 				]
 
 				driver_doc.save(ignore_permissions=True)
-
-				# frappe.db.set_value(
-				# "CICPA",
-				# self.name,
-				# {
-				# 	"vehicle": None,
-				# 	"driver": None,
-				# 	"active": 0,
-				# 	"cicpa_status": "Cancelled"
-				# },
-				# update_modified=False
-				# )
+				if self.driver:
+					self.db_set("driver", None, update_modified=False)
 
 			except Exception as e:
 				frappe.log_error(
