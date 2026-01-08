@@ -106,3 +106,111 @@ class CICPA(Document):
 			except Exception as e:
 				frappe.log_error(frappe.get_traceback(), "Error updating CICPA expiry date in Driver")
 				frappe.throw(_("Failed to update CICPA expiry date in Driver: {0}").format(str(e)))
+
+	def before_cancel(self):
+		try:
+			cicpa_logs = frappe.get_all(
+				"CICPA Logs",
+				filters={"cicpa": self.name},
+				fields=["name", "docstatus"]
+			)
+
+			for log in cicpa_logs:
+				frappe.db.set_value(
+					"CICPA Logs",
+					log.name,
+					"cicpa",
+					None
+				)
+
+				log_doc = frappe.get_doc("CICPA Logs", log.name)
+				if log_doc.docstatus == 1:
+					log_doc.cancel()
+
+				log_doc.delete(ignore_permissions=True)
+
+		except Exception as e:
+			frappe.log_error(
+				frappe.get_traceback(),
+				"CICPA before_cancel: CICPA Logs cleanup failed"
+			)
+			frappe.throw(
+				_("Cannot cancel CICPA due to linked CICPA Logs: {0}")
+				.format(str(e))
+			)
+
+		if self.cicpa_type == "Vehicle" and self.vehicle:
+			try:
+				vehicle_doc = frappe.get_doc("Vehicle", self.vehicle)
+
+				vehicle_doc.custom_has_cicpa = 0
+				vehicle_doc.custom_cicpa = None
+
+				vehicle_doc.custom_vehicle_certifications = [
+					row for row in vehicle_doc.get("custom_vehicle_certifications", [])
+					if not (
+						row.certification_name == "CICPA"
+						and row.reference_no == self.name
+					)
+				]
+
+				vehicle_doc.save(ignore_permissions=True)
+
+				# frappe.db.set_value(
+				# "CICPA",
+				# self.name,
+				# {
+				# 	"vehicle": None,
+				# 	"driver": None,
+				# 	"active": 0,
+				# 	"cicpa_status": "Cancelled"
+				# },
+				# update_modified=False
+				# )
+
+			except Exception as e:
+				frappe.log_error(
+					frappe.get_traceback(),
+					"CICPA before_cancel: Vehicle cleanup failed"
+				)
+				frappe.throw(
+					_("Failed to clean CICPA from Vehicle: {0}").format(str(e))
+				)
+
+		if self.cicpa_type == "Driver" and self.driver:
+			try:
+				driver_doc = frappe.get_doc("Driver", self.driver)
+
+				driver_doc.custom_has_cicpa = 0
+				driver_doc.custom_cicpa = None
+
+				driver_doc.custom_certification_list = [
+					row for row in driver_doc.get("custom_certification_list", [])
+					if not (
+						row.certification_name == "CICPA"
+						and row.reference_no == self.name
+					)
+				]
+
+				driver_doc.save(ignore_permissions=True)
+
+				# frappe.db.set_value(
+				# "CICPA",
+				# self.name,
+				# {
+				# 	"vehicle": None,
+				# 	"driver": None,
+				# 	"active": 0,
+				# 	"cicpa_status": "Cancelled"
+				# },
+				# update_modified=False
+				# )
+
+			except Exception as e:
+				frappe.log_error(
+					frappe.get_traceback(),
+					"CICPA before_cancel: Driver cleanup failed"
+				)
+				frappe.throw(
+					_("Failed to clean CICPA from Driver: {0}").format(str(e))
+				)
