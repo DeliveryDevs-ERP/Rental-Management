@@ -174,3 +174,108 @@ class DriverMovement(Document):
         shift_doc.status = "Inactive"
         shift_doc.save(ignore_permissions=True)
         frappe.msgprint(_("Shift Assignment {0} ended on {1}").format(shift_doc.name, self.date))
+
+    def on_cancel(self):
+        try:
+            if self.mobilization_status == "Mobilize":
+                self.cancel_mobilization()
+            else:  # Demobilize
+                self.cancel_demobilization()
+        except Exception as e:
+            frappe.db.rollback()
+            frappe.throw(_(f"Driver Movement cancellation failed due to: {str(e)}"))
+
+    def cancel_mobilization(self):
+        """Reverse the mobilization: remove links and cancel shift assignment"""
+        vehicle_doc = frappe.get_doc("Vehicle", self.vehicle)
+        driver_doc = frappe.get_doc("Driver", self.driver)
+        
+        # Remove from vehicle's custom_driver_shifts
+        new_vehicle_shifts = []
+        for row in vehicle_doc.custom_driver_shifts:
+            if row.mobilization == self.name:
+                continue
+            new_vehicle_shifts.append(row)
+        
+        vehicle_doc.set("custom_driver_shifts", [])
+        for idx, row in enumerate(new_vehicle_shifts, start=1):
+            row.idx = idx
+            vehicle_doc.append("custom_driver_shifts", row)
+        vehicle_doc.save(ignore_permissions=True)
+        
+        # Remove from driver's custom_shifts
+        new_driver_shifts = []
+        for row in driver_doc.custom_shifts:
+            if row.movement == self.name:
+                continue
+            new_driver_shifts.append(row)
+        
+        driver_doc.set("custom_shifts", [])
+        for idx, row in enumerate(new_driver_shifts, start=1):
+            row.idx = idx
+            driver_doc.append("custom_shifts", row)
+        
+        # Update driver state if no shifts remain
+        if len(driver_doc.custom_shifts) == 0:
+            driver_doc.custom_state = "Idle"
+        
+        driver_doc.save(ignore_permissions=True)
+        
+        # Cancel the Shift Assignment created by this mobilization
+        shift_assignments = frappe.get_all(
+            "Shift Assignment",
+            filters={
+                "custom_mobilization": self.name,
+                "docstatus": 1
+            },
+            fields=["name"]
+        )
+        
+        for sa in shift_assignments:
+            shift_doc = frappe.get_doc("Shift Assignment", sa.name)
+            shift_doc.cancel()
+        
+        frappe.msgprint(_("Mobilization cancelled and all related records have been unlinked."))
+
+    def cancel_demobilization(self):
+        """Reverse the demobilization: restore links and reactivate shift assignment"""
+        vehicle_doc = frappe.get_doc("Vehicle", self.vehicle)
+        driver_doc = frappe.get_doc("Driver", self.driver)
+        
+        # Re-add to vehicle's custom_driver_shifts
+        vehicle_doc.append("custom_driver_shifts", {
+            "driver": self.driver,
+            "mobilization": self.name,
+            "shift": self.shift
+        })
+        vehicle_doc.save(ignore_permissions=True)
+        
+        # Re-add to driver's custom_shifts
+        driver_doc.custom_state = "With Client"
+        driver_doc.append("custom_shifts", {
+            "movement": self.name,
+            "project": self.project,
+            "shift": self.shift
+        })
+        driver_doc.save(ignore_permissions=True)
+        
+        # Reactivate the Shift Assignment (remove end_date, set status back to Active)
+        shift_assignments = frappe.get_all(
+            "Shift Assignment",
+            filters={
+                "employee": driver_doc.employee,
+                "shift_type": self.shift,
+                "end_date": self.date,
+                "docstatus": 1
+            },
+            fields=["name"]
+        )
+        
+        if shift_assignments:
+            shift_doc = frappe.get_doc("Shift Assignment", shift_assignments[0].name)
+            shift_doc.end_date = None
+            shift_doc.status = "Active"
+            shift_doc.save(ignore_permissions=True)
+            frappe.msgprint(_("Shift Assignment {0} reactivated.").format(shift_doc.name))
+        
+        frappe.msgprint(_("Demobilization cancelled and driver has been re-linked."))

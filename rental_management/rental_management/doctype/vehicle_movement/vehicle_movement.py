@@ -74,3 +74,20 @@ class VehicleMovement(Document):
                 "custom_project": None
             })
             frappe.db.commit()
+
+    def on_cancel(self):
+        try:
+            if not self.vehicle:
+                return
+                
+            frappe.db.set_value("Vehicle", self.vehicle, {
+                "custom_last_location": self.location_from,
+                "custom_state": "Idle",
+                "custom_current_rent_type": None,
+                "custom_project": None
+            })
+            frappe.db.commit()
+            frappe.msgprint(_("Vehicle {0} has been unlinked and reset.").format(self.vehicle))
+        except Exception as e:
+            frappe.db.rollback()
+            frappe.throw(_(f"Vehicle Movement cancellation failed due to: {str(e)}"))
